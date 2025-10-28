@@ -1,17 +1,16 @@
 # ScanCentral DAST Sensor
 ## ❓ Description
 
-This repo contains the files required for a docker-contained Fortify ScanCentral DAST deployment.
+This repo contains the files required for a Podman Fortify ScanCentral DAST deployment.
 
 ## 🎉 Deployment
 
 ### 🐳 Offline image retrival
 
-If you plan to deploy this component on an offline environment, below are the commands to save the Docker image for
-loading in the destination environment
+If you plan to deploy this component on an offline environment, below are the commands to save the container image for loading in the destination environment
 1. First login to Docker Hub using your Docker Hub credentials
 ```
-docker login -u <Docker hub username>
+podman login docker.io -u <Docker hub username>
 ```
 2. Then save the image locally
 ```
@@ -27,18 +26,18 @@ docker login -u <Docker hub username>
 
 1. Login to Docker Hub using your Docker Hub credentials
 ```
-docker login -u <Docker hub username>
+podman login docker.io -u <Docker hub username>
 ```
 
 2. Copy or rename [.env.template](.env.template) to `.env`. 
-3. Review and edit the `.env` file, using values from the `.env` file from your dast-ctrl deployment
+3. Review and edit the `.env` file
 4. Update the image tag the `DOCKER_IMAGE_XXX` variables in `.env`
 5. Run the following command
 ```
-docker-compose up -d
+podman-compose up -d
 
 # You can tail the logs using the following command
-docker-compose logs -f
+podman-compose logs -f
 ```
 
 ### 🌡️ Environment variables
