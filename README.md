@@ -1,7 +1,7 @@
 # ScanCentral DAST Sensor
 ## ❓ Description
 
-This repo contains the files required for a Podman Fortify ScanCentral DAST deployment.
+This repo contains the files required for a Podman Fortify ScanCentral DAST Scanner / Sensor deployment.
 
 ## 🎉 Deployment
 
