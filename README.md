@@ -10,7 +10,7 @@ This repo contains the files required for a Podman Fortify ScanCentral DAST Scan
 If you plan to deploy this component on an offline environment, below are the commands to save the container image for loading in the destination environment
 1. First login to Docker Hub using your Docker Hub credentials
 ```
-podman login docker.io -u <Docker hub username>
+podman login docker.io
 ```
 2. Then save the image locally
 ```
@@ -26,7 +26,7 @@ podman login docker.io -u <Docker hub username>
 
 1. Login to Docker Hub using your Docker Hub credentials
 ```
-podman login docker.io -u <Docker hub username>
+podman login docker.io -u
 ```
 
 2. Copy or rename [.env.template](.env.template) to `.env`. 
