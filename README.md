@@ -14,11 +14,33 @@ podman login docker.io
 ```
 2. Then save the image locally
 ```
-./save-images.sh
+# 1. DAST Scanner
+podman pull fortifydocker/dast-scanner:25.2.ubi.9
+podman save fortifydocker/dast-scanner:25.2.ubi.9 -o fortifydocker_dast-scanner_25.2.ubi.9.tar
+
+# 2. Scanner Service
+podman pull fortifydocker/scancentral-dast-scannerservice:25.2.ubi.9
+podman save fortifydocker/scancentral-dast-scannerservice:25.2.ubi.9 -o fortifydocker_scancentral-dast-scannerservice_25.2.ubi.9.tar
+
+# 3. WISE
+podman pull fortifydocker/wise:25.2.ubi.9
+podman save fortifydocker/wise:25.2.ubi.9 -o fortifydocker_wise_25.2.ubi.9.tar
+
+# 4. MS SQL Server Datastore
+podman pull mcr.microsoft.com/mssql/server:2022-latest
+podman save mcr.microsoft.com/mssql/server:2022-latest -o mcr.microsoft.com_mssql_server_2022-latest.tar
+
+# 5. Fortify 2FA (Optional)
+podman pull fortifydocker/fortify-2fa:25.2.ubi.9
+podman save fortifydocker/fortify-2fa:25.2.ubi.9 -o fortifydocker_fortify-2fa_25.2.ubi.9.tar
 ```
 3. Get this tar file in the destination environment, and load it
 ```
-./load-images.sh
+podman load -i fortifydocker_dast-scanner_25.2.ubi.9.tar
+podman load -i fortifydocker_scancentral-dast-scannerservice_25.2.ubi.9.tar
+podman load -i fortifydocker_wise_25.2.ubi.9.tar
+podman load -i mcr.microsoft.com_mssql_server_2022-latest.tar
+podman load -i fortifydocker_fortify-2fa_25.2.ubi.9.tar
 ```
 
 
