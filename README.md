@@ -5,7 +5,7 @@ This repo contains the files required for a Podman Fortify ScanCentral DAST Scan
 
 ## 🎉 Deployment
 
-### 🐳 Offline image retrival
+### 🐳 Offline image retrival (Optional)
 
 If you plan to deploy this component on an offline environment, below are the commands to save the container image for loading in the destination environment
 1. First login to Docker Hub using your Docker Hub credentials
