@@ -1,0 +1,99 @@
+services:
+  wiscanner:
+    container_name: wiscanner
+    image: ${DOCKER_IMAGE_SCANNER}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      - datastore
+    networks:
+      - fortify-network
+    volumes:
+      - scandata:/etc/wi/.widata/user/ScanData:z
+    environment:
+      - "WI_MODE=2"
+      - "WI_API_HOST=+"
+      - "WI_API_PORT=8089"
+      - "WI_WISE=ws://wise:9442"
+      - "WI_SQLEXPRESS=Data Source=datastore;User Id=sa;Password=${DAST_DB_MSSQL_SA_PASSWORD};"
+      - "WI_API_TLS_ENABLED=${WI_API_TLS_ENABLED}"
+      - "WI_API_AUTH=None"
+      - "WI_ENABLE_JSON_SCAN_SETTINGS=true"
+      - "WI_DB_SIZE_LIMIT=9216"
+      - "WI_DB_SIZE_STOP_SCAN=1"
+      - "WI_DB_SIZE_CHECK_INTERVAL=60"
+      - "DASTApiRootUrl=https://${DAST_API_HOST}:${DAST_API_HOST_PORT}"
+      - "AllowNonTrustedServerCertificate=${DAST_API_ALLOW_NON_TRUSTED_CERTS}"
+      - "ServiceToken=${DAST_SERVICE_TOKEN}"
+      - "ScannerPoolId=0"
+      - "ScannerDescription="
+      - "ScannerType=Fixed"
+
+  datastore:
+    container_name: datastore
+    image: ${DOCKER_IMAGE_DATASTORE}
+    restart: unless-stopped
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "MSSQL_PID=Express"
+      - "SA_PASSWORD=${DAST_DB_MSSQL_SA_PASSWORD}"
+    networks:
+      - fortify-network
+    volumes:
+      - scandata:/etc/wi/.widata/user/ScanData:z
+
+  wise:
+    container_name: wise
+    image: ${DOCKER_IMAGE_WISE}
+    pull_policy: always
+    restart: unless-stopped
+    networks:
+      - fortify-network
+
+#    twofa:
+#        image: ${DOCKER_IMAGE_2FA}
+#        pull_policy: always
+#        restart: unless-stopped
+#        networks:
+#          - fortify-network
+
+  dastscanner:
+    container_name: dastscanner
+    image: ${DOCKER_IMAGE_SCANNERSERVICE}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      - datastore
+    networks:
+      - fortify-network
+    volumes:
+      - ${DOCKER_HOST_VOLUME_SECRETS}:/app/secrets:z
+    environment:
+      - "DASTApiRootUrl=https://${DAST_API_HOST}:${DAST_API_HOST_PORT}"
+      - "AllowNonTrustedServerCertificate=${DAST_API_ALLOW_NON_TRUSTED_CERTS}"
+      - "ServiceToken=${DAST_SERVICE_TOKEN}"
+      - "ScannerPoolId=0"
+      - "ScannerDescription="
+      - "ScannerType=Fixed"
+      - "WebInspectRestApiRootUrl=http://wiscanner:8089"
+      - "WebInspectRestApiAuthenticationType=${WI_API_AUTH_TYPE}"
+      - "WebInspectRestApiUserName=${WI_API_USERNAME}"
+      - "WebInspectRestApiPassword=${WI_API_PASSWORD}"
+      - "ProxySettings__UseProxy=${WI_USE_PROXY}"
+      - "ProxySettings__ProxyAddress=${WI_PROXY_ADDRESS}"
+      - "ProxySettings__ProxyPassword=${WI_PROXY_PASSWORD}"
+      - "ProxySettings__ProxyUserName=${WI_PROXY_USERNAME}"
+      - "ProxySettings__ProxyBypassList=${WI_PROXY_BYPASS_LIST}"
+      - "ProxySettings__BypassOnLocal=${WI_PROXY_BYPASS_ON_LOCAL}"
+      - "DASTApiClientCertificateSettings__Enabled=${DAST_API_CLIENT_CERTIFICATE_ENABLED}"
+      - "DASTApiClientCertificateSettings__ClientCertificates__0__Path=${DAST_API_CLIENT_CERTIFICATE_PATH}"
+      - "DASTApiClientCertificateSettings__ClientCertificates__0__Password=${DAST_API_CLIENT_CERTIFICATE_PASSWORD}"
+      #- "EnableHealthCheck="
+      #- "HealthCheckPort="
+
+networks:
+  fortify-network:
+    name: fortify-network
+    external: true
+volumes:
+  scandata:
