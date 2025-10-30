@@ -54,7 +54,8 @@ podman login docker.io -u
 2. Copy or rename [.env.template](.env.template) to `.env`. 
 3. Review and edit the `.env` file
 4. Update the image tag the `DOCKER_IMAGE_XXX` variables in `.env`
-5. Run the following command
+5. Create a podman network `podman network create fortify-network`
+6. Run the following command
 ```
 podman-compose up -d
 
